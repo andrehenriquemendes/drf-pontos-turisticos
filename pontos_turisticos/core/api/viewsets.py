@@ -12,7 +12,7 @@ class PontoTuristicoViewSet(ModelViewSet):
     search_fields = ('nome', 'descricao', 'endereco__linha1')
     # endereco eh chave estrangeira
     # linha1 eh um atributo do endereco
-
+    lookup_field = 'nome'
     # sobrescrevendo o metodo get_queryset
     def get_queryset(self):
         id = self.request.query_params.get('id', None)
