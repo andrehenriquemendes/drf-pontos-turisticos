@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -15,7 +16,7 @@ class PontoTuristicoViewSet(ModelViewSet):
     search_fields = ('nome', 'descricao', 'endereco__linha1')
     # endereco eh chave estrangeira
     # linha1 eh um atributo do endereco
-    lookup_field = 'nome'
+    lookup_field = 'id'
     # sobrescrevendo o metodo get_queryset
     def get_queryset(self):
         id = self.request.query_params.get('id', None)
@@ -57,3 +58,14 @@ class PontoTuristicoViewSet(ModelViewSet):
     @action(methods=['get'], detail=True)
     def teste(self, request):
         pass
+
+    @action(methods=['post'], detail=True)
+    def associa_atracoes(self, request, id):
+        atracoes = request.data['ids']
+
+        ponto = PontoTuristico.objects.get(id=id)
+
+        ponto.atracoes.set(atracoes)
+
+        ponto.save()
+        return HttpResponse('OK')
